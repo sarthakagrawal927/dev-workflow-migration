@@ -1,0 +1,44 @@
+# This is Git's per-user configuration file.
+[user]
+	name = Sarthak Agrawal
+	email = sarthakagrawal927@gmail.com
+# Please adapt and uncomment the following lines:
+	# name = Sarthak Agrawal
+	# email = sarthak.agrawal@front.page
+[init]
+	defaultBranch = main
+	templatedir = /Users/sarthakagrawal/.git-templates
+[core]
+	excludesfile = /Users/sarthakagrawal/.gitignore_global
+	editor = nano
+	pager = delta
+[interactive]
+	diffFilter = delta --color-only
+[delta]
+	navigate = true
+	side-by-side = true
+	line-numbers = true
+	hyperlinks = true
+[merge]
+	conflictstyle = diff3
+[diff]
+	colorMoved = default
+[alias]
+	undo = reset --soft HEAD~1
+	wip = !git add -A && git commit -m \"wip: work in progress\"
+	unwip = reset HEAD~1
+	graph = log --oneline --graph --decorate --all -20
+	cleanup = !git branch --merged | grep -v '\\*\\|main\\|master' | xargs -n 1 git branch -d
+[difftool "sourcetree"]
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path = 
+[mergetool "sourcetree"]
+	cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true
+[commit]
+	template = /Users/sarthakagrawal/.stCommitMsg
+[filter "lfs"]
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f

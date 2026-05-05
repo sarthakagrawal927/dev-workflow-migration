@@ -1,0 +1,5 @@
+[core]
+project = today-little-log
+disable_usage_reporting = False
+account = sarthak@vaultwealth.com
+

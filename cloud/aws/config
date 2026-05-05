@@ -1,0 +1,20 @@
+[default]
+region = us-east-1
+[profile vault-stg]
+sso_session = vault-sso
+sso_account_id = 220306223891
+sso_role_name = AdministratorAccess
+region = me-central-1
+[sso-session vault-sso]
+sso_start_url = https://vaultwealth.awsapps.com/start/#/
+sso_region = us-east-1
+sso_registration_scopes = sso:account:access
+[profile vault-prod]
+sso_session = vault-prod
+sso_account_id = 695402231796
+sso_role_name = AdministratorAccess
+region = eu-central-1
+[sso-session vault-prod]
+sso_start_url = https://vaultwealth.awsapps.com/start/#/
+sso_region = us-east-1
+sso_registration_scopes = sso:account:access
