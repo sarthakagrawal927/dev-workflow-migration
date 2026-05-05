@@ -4,27 +4,26 @@ set -euo pipefail
 DRY_RUN=0
 WITH_GUI=0
 WITH_INFRA=0
-WITH_RUNTIMES=1
-WITH_GLOBAL_NPM=1
+WITH_SHELL_EXTRAS=0
 
 CORE_BREW_PACKAGES=(
   git
-  git-lfs
   gh
   gitleaks
-  jq
   ripgrep
-  fd
-  fzf
-  bat
-  eza
-  zoxide
-  tmux
-  mise
-  uv
-  pnpm
+  node
   awscli
   azure-cli
+)
+
+SHELL_EXTRA_BREW_PACKAGES=(
+  bat
+  eza
+  fd
+  fzf
+  jq
+  tmux
+  zoxide
 )
 
 INFRA_BREW_PACKAGES=(
@@ -51,14 +50,8 @@ GUI_BREW_CASKS=(
   rectangle
 )
 
-MISE_TOOLS=(
-  node@lts
-  python@3.12
-)
-
 GLOBAL_NPM_PACKAGES=(
   @openai/codex
-  wrangler
 )
 
 usage() {
@@ -70,10 +63,10 @@ It does not copy credentials or authenticate cloud providers.
 
 Options:
   --dry-run          Print commands without running them
+  --with-shell       Also install shell comfort tools: bat, eza, fd, fzf, jq, tmux, zoxide
   --with-gui         Also install selected GUI apps: Ghostty, iTerm2, Rectangle
   --with-infra       Also install heavier local infra tools: Docker, kubectl, Redis, Postgres
-  --no-runtimes      Install mise but skip Node/Python runtime installation
-  --no-global-npm    Skip global npm packages: Codex CLI, Wrangler
+  --no-codex         Skip global Codex CLI installation
   -h, --help         Show this help
 USAGE
 }
@@ -153,28 +146,8 @@ brew_install_casks() {
   done
 }
 
-ensure_mise_runtimes() {
-  if [[ "$WITH_RUNTIMES" != "1" ]]; then
-    return
-  fi
-
-  log "Installing mise-managed runtimes"
-  if have mise; then
-    eval "$(mise activate bash)"
-  elif [[ "$DRY_RUN" != "1" ]]; then
-    printf 'mise is unavailable; cannot install runtimes.\n' >&2
-    return
-  fi
-
-  local tool
-  for tool in "${MISE_TOOLS[@]}"; do
-    run mise use --global "$tool"
-  done
-  run mise install
-}
-
-install_global_npm_packages() {
-  if [[ "$WITH_GLOBAL_NPM" != "1" ]]; then
+install_codex_cli() {
+  if [[ "${WITH_CODEX:-1}" != "1" ]]; then
     return
   fi
 
@@ -183,7 +156,7 @@ install_global_npm_packages() {
     return
   fi
 
-  log "Installing global npm packages"
+  log "Installing Codex CLI"
   local package
   for package in "${GLOBAL_NPM_PACKAGES[@]}"; do
     if npm list -g --depth=0 "$package" >/dev/null 2>&1; then
@@ -198,13 +171,12 @@ print_next_steps() {
   cat <<'NEXT'
 
 Next steps:
-  1. Review this repo before copying configs into $HOME.
-  2. Re-auth providers instead of restoring old tokens:
+  1. Re-auth providers:
        gh auth login
        aws sso login --profile <profile>
        gcloud auth login
        az login
-  3. Copy only the config files you still want from shell/, git/, codex/, and cloud/.
+  2. Copy only reviewed files from shell/, git/, codex/, and cloud/.
 NEXT
 }
 
@@ -212,10 +184,10 @@ main() {
   while [[ $# -gt 0 ]]; do
     case "$1" in
       --dry-run) DRY_RUN=1 ;;
+      --with-shell) WITH_SHELL_EXTRAS=1 ;;
       --with-gui) WITH_GUI=1 ;;
       --with-infra) WITH_INFRA=1 ;;
-      --no-runtimes) WITH_RUNTIMES=0 ;;
-      --no-global-npm) WITH_GLOBAL_NPM=0 ;;
+      --no-codex) WITH_CODEX=0 ;;
       -h|--help)
         usage
         exit 0
@@ -243,6 +215,11 @@ main() {
   log "Installing core casks"
   brew_install_casks "${CORE_BREW_CASKS[@]}"
 
+  if [[ "$WITH_SHELL_EXTRAS" == "1" ]]; then
+    log "Installing optional shell tools"
+    brew_install_packages "${SHELL_EXTRA_BREW_PACKAGES[@]}"
+  fi
+
   if [[ "$WITH_INFRA" == "1" ]]; then
     log "Installing optional infra tools"
     brew_install_packages "${INFRA_BREW_PACKAGES[@]}"
@@ -254,8 +231,7 @@ main() {
     brew_install_casks "${GUI_BREW_CASKS[@]}"
   fi
 
-  ensure_mise_runtimes
-  install_global_npm_packages
+  install_codex_cli
   print_next_steps
 }
 

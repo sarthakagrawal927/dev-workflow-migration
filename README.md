@@ -30,8 +30,15 @@ Sanitized development workflow bundle for setting up a new laptop deliberately.
 Install tools deliberately, then copy back only the files you actually need. Re-auth with each provider instead of migrating auth state:
 
 ```sh
-scripts/bootstrap-dev-machine.sh --dry-run
-scripts/bootstrap-dev-machine.sh
+./scripts/bootstrap-dev-machine.sh --dry-run
+./scripts/bootstrap-dev-machine.sh
+```
+
+Default install is intentionally small: Homebrew, Git, GitHub CLI, `gitleaks`, `ripgrep`, Node, Codex CLI, AWS CLI, gcloud, and Azure CLI.
+
+Re-auth manually:
+
+```sh
 gh auth login
 aws sso login --profile <profile>
 gcloud auth login
@@ -41,8 +48,9 @@ az login
 Optional installs are explicit:
 
 ```sh
-scripts/bootstrap-dev-machine.sh --with-gui
-scripts/bootstrap-dev-machine.sh --with-infra
+./scripts/bootstrap-dev-machine.sh --with-shell
+./scripts/bootstrap-dev-machine.sh --with-gui
+./scripts/bootstrap-dev-machine.sh --with-infra
 ```
 
-Before reusing anything, review the files in this repo and delete configs for workflows you no longer want.
+Before copying anything into `$HOME`, review it. Copy only the files you still want.
