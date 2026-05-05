@@ -45,10 +45,17 @@ gcloud auth login
 az login
 ```
 
-Optional installs are explicit:
+Optional installs are explicit and documented in `INSTALL-MANIFEST.md`:
 
 ```sh
 ./scripts/bootstrap-dev-machine.sh --with-shell
+./scripts/bootstrap-dev-machine.sh --with-js
+./scripts/bootstrap-dev-machine.sh --with-k8s
+./scripts/bootstrap-dev-machine.sh --with-db
+./scripts/bootstrap-dev-machine.sh --with-mobile
+./scripts/bootstrap-dev-machine.sh --with-ai
+./scripts/bootstrap-dev-machine.sh --with-deploy
+./scripts/bootstrap-dev-machine.sh --with-most
 ./scripts/bootstrap-dev-machine.sh --with-gui
 ./scripts/bootstrap-dev-machine.sh --with-infra
 ```

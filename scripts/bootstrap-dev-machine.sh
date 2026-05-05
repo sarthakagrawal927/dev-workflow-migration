@@ -5,6 +5,12 @@ DRY_RUN=0
 WITH_GUI=0
 WITH_INFRA=0
 WITH_SHELL_EXTRAS=0
+WITH_AI=0
+WITH_DB=0
+WITH_DEPLOY=0
+WITH_JS=0
+WITH_K8S=0
+WITH_MOBILE=0
 
 CORE_BREW_PACKAGES=(
   git
@@ -26,14 +32,36 @@ SHELL_EXTRA_BREW_PACKAGES=(
   zoxide
 )
 
-INFRA_BREW_PACKAGES=(
+JS_BREW_PACKAGES=(
+  bun
+  pnpm
+  yarn
+)
+
+JS_NPM_PACKAGES=(
+  nodemon
+  tsx
+)
+
+K8S_BREW_PACKAGES=(
+  argocd
   kubectl
   kubectx
   helm
   k9s
   kind
+  minikube
+  skaffold
+)
+
+DB_BREW_PACKAGES=(
   redis
+  mysql-client
+  mongodb/brew/mongodb-database-tools
   postgresql@17
+)
+
+INFRA_BREW_PACKAGES=(
 )
 
 INFRA_BREW_CASKS=(
@@ -50,6 +78,38 @@ GUI_BREW_CASKS=(
   rectangle
 )
 
+AI_BREW_PACKAGES=(
+  anomalyco/tap/opencode
+)
+
+AI_BREW_CASKS=(
+  claude-code
+  gemini
+)
+
+DEPLOY_BREW_PACKAGES=(
+  hcloud
+  render
+  stripe/stripe-cli/stripe
+  temporal
+)
+
+DEPLOY_BREW_CASKS=(
+  ngrok
+)
+
+DEPLOY_NPM_PACKAGES=(
+  wrangler
+)
+
+MOBILE_BREW_PACKAGES=(
+  cocoapods
+)
+
+MOBILE_BREW_CASKS=(
+  android-commandlinetools
+)
+
 GLOBAL_NPM_PACKAGES=(
   @openai/codex
 )
@@ -64,8 +124,15 @@ It does not copy credentials or authenticate cloud providers.
 Options:
   --dry-run          Print commands without running them
   --with-shell       Also install shell comfort tools: bat, eza, fd, fzf, jq, tmux, zoxide
+  --with-js          Also install JS tools: bun, pnpm, yarn, nodemon, tsx
+  --with-k8s         Also install Kubernetes tools: kubectl, helm, k9s, kind, minikube, skaffold, argocd
+  --with-db          Also install database CLIs/services: Postgres, Redis, MySQL client, MongoDB tools
+  --with-mobile      Also install mobile tools: Android command line tools, CocoaPods
+  --with-ai          Also install AI/dev CLIs: Claude Code, Gemini, opencode
+  --with-deploy      Also install deploy/service CLIs: Wrangler, Stripe, Render, Temporal, hcloud, ngrok
   --with-gui         Also install selected GUI apps: Ghostty, iTerm2, Rectangle
-  --with-infra       Also install heavier local infra tools: Docker, kubectl, Redis, Postgres
+  --with-infra       Also install Docker
+  --with-most        Install all named profiles except GUI
   --no-codex         Skip global Codex CLI installation
   -h, --help         Show this help
 USAGE
@@ -167,6 +234,22 @@ install_codex_cli() {
   done
 }
 
+install_npm_packages() {
+  if ! have npm && [[ "$DRY_RUN" != "1" ]]; then
+    printf 'npm is unavailable; skipping npm package profile.\n' >&2
+    return
+  fi
+
+  local package
+  for package in "$@"; do
+    if npm list -g --depth=0 "$package" >/dev/null 2>&1; then
+      printf 'already installed: %s\n' "$package"
+    else
+      run npm install -g "$package"
+    fi
+  done
+}
+
 print_next_steps() {
   cat <<'NEXT'
 
@@ -185,8 +268,24 @@ main() {
     case "$1" in
       --dry-run) DRY_RUN=1 ;;
       --with-shell) WITH_SHELL_EXTRAS=1 ;;
+      --with-js) WITH_JS=1 ;;
+      --with-k8s) WITH_K8S=1 ;;
+      --with-db) WITH_DB=1 ;;
+      --with-mobile) WITH_MOBILE=1 ;;
+      --with-ai) WITH_AI=1 ;;
+      --with-deploy) WITH_DEPLOY=1 ;;
       --with-gui) WITH_GUI=1 ;;
       --with-infra) WITH_INFRA=1 ;;
+      --with-most)
+        WITH_AI=1
+        WITH_DB=1
+        WITH_DEPLOY=1
+        WITH_INFRA=1
+        WITH_JS=1
+        WITH_K8S=1
+        WITH_MOBILE=1
+        WITH_SHELL_EXTRAS=1
+        ;;
       --no-codex) WITH_CODEX=0 ;;
       -h|--help)
         usage
@@ -220,9 +319,46 @@ main() {
     brew_install_packages "${SHELL_EXTRA_BREW_PACKAGES[@]}"
   fi
 
+  if [[ "$WITH_JS" == "1" ]]; then
+    log "Installing optional JavaScript tools"
+    brew_install_packages "${JS_BREW_PACKAGES[@]}"
+    install_npm_packages "${JS_NPM_PACKAGES[@]}"
+  fi
+
+  if [[ "$WITH_K8S" == "1" ]]; then
+    log "Installing optional Kubernetes tools"
+    brew_install_packages "${K8S_BREW_PACKAGES[@]}"
+  fi
+
+  if [[ "$WITH_DB" == "1" ]]; then
+    log "Installing optional database tools"
+    brew_install_packages "${DB_BREW_PACKAGES[@]}"
+  fi
+
+  if [[ "$WITH_MOBILE" == "1" ]]; then
+    log "Installing optional mobile tools"
+    brew_install_packages "${MOBILE_BREW_PACKAGES[@]}"
+    brew_install_casks "${MOBILE_BREW_CASKS[@]}"
+  fi
+
+  if [[ "$WITH_AI" == "1" ]]; then
+    log "Installing optional AI/dev CLIs"
+    brew_install_packages "${AI_BREW_PACKAGES[@]}"
+    brew_install_casks "${AI_BREW_CASKS[@]}"
+  fi
+
+  if [[ "$WITH_DEPLOY" == "1" ]]; then
+    log "Installing optional deploy/service CLIs"
+    brew_install_packages "${DEPLOY_BREW_PACKAGES[@]}"
+    brew_install_casks "${DEPLOY_BREW_CASKS[@]}"
+    install_npm_packages "${DEPLOY_NPM_PACKAGES[@]}"
+  fi
+
   if [[ "$WITH_INFRA" == "1" ]]; then
     log "Installing optional infra tools"
-    brew_install_packages "${INFRA_BREW_PACKAGES[@]}"
+    if [[ "${#INFRA_BREW_PACKAGES[@]}" -gt 0 ]]; then
+      brew_install_packages "${INFRA_BREW_PACKAGES[@]}"
+    fi
     brew_install_casks "${INFRA_BREW_CASKS[@]}"
   fi
 
