@@ -6,6 +6,7 @@ Sanitized development workflow bundle for setting up a new laptop deliberately.
 
 - `shell/`: shell startup files from this machine.
 - `git/`: global Git configuration and global ignore rules.
+- `brew/Brewfile`: your explicit place for extra Homebrew installs beyond the default profiles.
 - `scripts/`: bootstrap and restore helpers for a fresh Mac.
 - `install-profiles.json` and `INSTALL-MANIFEST.md`: install profile definitions and rationale.
 
@@ -29,6 +30,7 @@ bash ./scripts/setup-dev-machine.sh
 Default behavior:
 
 - Installs the small default tool set: Homebrew, Git, GitHub CLI, `gitleaks`, `ripgrep`, Node, Codex CLI, AWS CLI, gcloud, and Azure CLI.
+- Applies `brew/Brewfile` from this repo for any extra formulas/casks you choose to keep there.
 - Restores only `shell` and `git` config into the right places under `$HOME`.
 
 Re-auth manually if and when you install and use cloud tooling:

@@ -35,7 +35,7 @@ export PATH=$PATH:$ANDROID_SDK_ROOT/emulator:$ANDROID_SDK_ROOT/platform-tools
 # Java
 export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-17.0.2.jdk/Contents/Home
 
-# mise (manages node, python, ruby, java, elixir)
+# mise (manages runtime toolchains)
 eval "$(mise activate zsh)"
 
 # pnpm
@@ -74,7 +74,6 @@ alias grebase="git stash && git rebase && git stash pop"
 alias gcl="git clone"
 
 # Project
-alias py="python3"
 alias p="pnpm"
 alias ku="kubectl"
 alias nrd="npm run dev"
@@ -118,7 +117,6 @@ export PATH="$PATH:/Users/sarthakagrawal/.turso"
 export PATH="/Users/sarthakagrawal/.codeium/windsurf/bin:$PATH"
 [[ "$TERM_PROGRAM" == "kiro" ]] && . "$(kiro --locate-shell-integration-path zsh)"
 . "$HOME/.local/bin/env"
-
 if [[ -o interactive ]] && [[ -t 1 ]] && (( ${+functions[p10k]} )); then
   p10k finalize
 fi

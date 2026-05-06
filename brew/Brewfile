@@ -1,0 +1,10 @@
+# Add the extra Homebrew packages you specifically want on a new machine here.
+# The bootstrap script applies this file automatically with:
+#   brew bundle --file brew/Brewfile
+#
+# Examples:
+# brew "watchman"
+# brew "mas"
+# cask "visual-studio-code"
+# tap "homebrew/cask-fonts"
+

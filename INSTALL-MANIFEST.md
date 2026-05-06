@@ -14,6 +14,14 @@ Required for this repo to be useful on a fresh machine:
 - `@openai/codex`: Codex CLI.
 - `awscli`, `google-cloud-sdk`, `azure-cli`: keep the common cloud CLIs available without bundling provider config.
 
+## User-Owned Homebrew Additions
+
+Put any extra Homebrew packages you specifically want into `brew/Brewfile`.
+
+- Keep the script defaults surgical.
+- Use the Brewfile for your own must-have formulas, casks, and taps.
+- The bootstrap script applies that file automatically with `brew bundle`.
+
 ## Optional Profiles
 
 - `--with-shell`: shell quality-of-life tools already referenced by shell config.

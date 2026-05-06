@@ -9,8 +9,6 @@ export NVM_DIR="$HOME/.nvm"
 # Fig post block. Keep at the bottom of this file.
 [[ -f "$HOME/.fig/shell/bashrc.post.bash" ]] && builtin source "$HOME/.fig/shell/bashrc.post.bash"
 
-. "$HOME/.local/bin/env"
-
 # Added by LM Studio CLI (lms)
 export PATH="$PATH:/Users/sarthakagrawal/.lmstudio/bin"
 # End of LM Studio CLI section

@@ -114,6 +114,12 @@ GLOBAL_NPM_PACKAGES=(
   @openai/codex
 )
 
+repo_root() {
+  local script_dir
+  script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  cd "$script_dir/.." && pwd
+}
+
 usage() {
   cat <<'USAGE'
 Usage: scripts/bootstrap-dev-machine.sh [options]
@@ -135,6 +141,8 @@ Options:
   --with-most        Install all named profiles except GUI
   --no-codex         Skip global Codex CLI installation
   -h, --help         Show this help
+
+The script also applies `brew/Brewfile` from this repo if it exists.
 USAGE
 }
 
@@ -211,6 +219,19 @@ brew_install_casks() {
       run brew install --cask "$cask"
     fi
   done
+}
+
+apply_repo_brewfile() {
+  local root brewfile
+  root="$(repo_root)"
+  brewfile="$root/brew/Brewfile"
+
+  if [[ ! -f "$brewfile" ]]; then
+    return
+  fi
+
+  log "Applying repo Brewfile"
+  run brew bundle --file "$brewfile"
 }
 
 install_codex_cli() {
@@ -368,6 +389,7 @@ main() {
     brew_install_casks "${GUI_BREW_CASKS[@]}"
   fi
 
+  apply_repo_brewfile
   install_codex_cli
   print_next_steps
 }
