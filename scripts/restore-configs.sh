@@ -15,8 +15,7 @@ Restore reviewed config files from this repo into the current user's home direct
 Items:
   shell      Restore shell startup files
   git        Restore Git config files
-  codex      Restore Codex prompts/skills/agents/rules/hooks
-  all        Restore shell, git, and codex
+  all        Restore shell and git
 
 Options:
   --dry-run   Print actions without writing files
@@ -109,29 +108,15 @@ restore_git() {
   copy_file "$root/git/gitignore_global" "$HOME/.gitignore_global"
 }
 
-restore_codex() {
-  local root="$1"
-  log "Restoring Codex config"
-  run mkdir -p "$HOME/.codex"
-  copy_file "$root/codex/AGENTS.md" "$HOME/.codex/AGENTS.md"
-  copy_file "$root/codex/hooks.json" "$HOME/.codex/hooks.json"
-  copy_dir "$root/codex/agents" "$HOME/.codex/agents"
-  copy_dir "$root/codex/prompts" "$HOME/.codex/prompts"
-  copy_dir "$root/codex/rules" "$HOME/.codex/rules"
-  copy_dir "$root/codex/skills" "$HOME/.codex/skills"
-}
-
 run_selection() {
   local root="$1"
   local item="$2"
   case "$item" in
     shell) restore_shell "$root" ;;
     git) restore_git "$root" ;;
-    codex) restore_codex "$root" ;;
     all)
       restore_shell "$root"
       restore_git "$root"
-      restore_codex "$root"
       ;;
     *)
       printf 'Unknown item: %s\n' "$item" >&2
@@ -158,7 +143,7 @@ main() {
   done
 
   if [[ "${#SELECTIONS[@]}" -eq 0 ]]; then
-    SELECTIONS=(shell git codex)
+    SELECTIONS=(shell git)
   fi
 
   local root

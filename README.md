@@ -6,19 +6,16 @@ Sanitized development workflow bundle for setting up a new laptop deliberately.
 
 - `shell/`: shell startup files from this machine.
 - `git/`: global Git configuration and global ignore rules.
-- `codex/skills/`: local Codex skills.
-- `codex/prompts/`: local Codex role prompts.
-- `codex/agents/`: local Codex agent definitions.
-- `codex/rules/`: local Codex rules.
-- `codex/AGENTS.md` and `codex/hooks.json`: portable Codex guidance and hook configuration.
+- `scripts/`: bootstrap and restore helpers for a fresh Mac.
+- `install-profiles.json` and `INSTALL-MANIFEST.md`: install profile definitions and rationale.
 
 ## Intentionally Excluded
 
 - SSH private keys, public keys, known hosts, and SSH config.
 - GitHub CLI `hosts.yml` and auth state.
 - All cloud provider config and auth state.
+- OMX-specific prompts, agents, hooks, rules, skills, and runtime state.
 - Codex auth, sessions, logs, browser sessions, caches, temporary files, SQLite state, worktrees, history, and internal storage.
-- Token-shaped examples in copied Codex reference files were redacted so the bundle passes `gitleaks`.
 
 ## New Machine Notes
 
@@ -32,7 +29,7 @@ bash ./scripts/setup-dev-machine.sh
 Default behavior:
 
 - Installs the small default tool set: Homebrew, Git, GitHub CLI, `gitleaks`, `ripgrep`, Node, Codex CLI, AWS CLI, gcloud, and Azure CLI.
-- Restores `shell`, `git`, and `codex` config into the right places under `$HOME`.
+- Restores only `shell` and `git` config into the right places under `$HOME`.
 
 Re-auth manually if and when you install and use cloud tooling:
 
