@@ -14,7 +14,7 @@ Sanitized development workflow bundle for setting up a new laptop deliberately.
 - SSH private keys, public keys, known hosts, and SSH config.
 - GitHub CLI `hosts.yml` and auth state.
 - All cloud provider config and auth state.
-- OMX-specific prompts, agents, hooks, rules, skills, and runtime state.
+- OMX-specific workflow artifacts and runtime state.
 - Codex auth, sessions, logs, browser sessions, caches, temporary files, SQLite state, worktrees, history, and internal storage.
 
 ## New Machine Notes
