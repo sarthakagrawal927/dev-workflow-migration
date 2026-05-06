@@ -12,7 +12,7 @@ Required for this repo to be useful on a fresh machine:
 - `ripgrep`: fast search used by Codex workflows.
 - `node`: runtime for Codex CLI.
 - `@openai/codex`: Codex CLI.
-- `awscli`, `google-cloud-sdk`, `azure-cli`: match the included cloud config metadata.
+- `awscli`, `google-cloud-sdk`, `azure-cli`: keep the common cloud CLIs available without bundling provider config.
 
 ## Optional Profiles
 

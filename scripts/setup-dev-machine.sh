@@ -17,7 +17,7 @@ Usage: bash ./scripts/setup-dev-machine.sh [options]
 Install selected tooling and restore reviewed config into the right places under $HOME.
 By default this runs both steps:
   1. bootstrap install
-  2. restore shell, git, codex, and cloud config
+  2. restore shell, git, and codex config
 
 Install options:
   --with-shell
@@ -34,7 +34,7 @@ Install options:
 
 Restore options:
   --restore ITEM   Restore one item; repeatable
-                   Items: shell, git, codex, aws, gcloud, azure, cloud, all
+                   Items: shell, git, codex, all
   --force          Overwrite existing files during restore
   --no-backup      Do not create timestamped backups during restore
 
@@ -103,7 +103,7 @@ main() {
   fi
 
   if [[ "${#RESTORE_ITEMS[@]}" -eq 0 ]]; then
-    RESTORE_ITEMS=(shell git codex cloud)
+    RESTORE_ITEMS=(shell git codex)
   fi
 
   if [[ "$ONLY_RESTORE" != "1" ]]; then

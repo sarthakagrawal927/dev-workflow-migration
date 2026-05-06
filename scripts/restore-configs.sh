@@ -16,11 +16,7 @@ Items:
   shell      Restore shell startup files
   git        Restore Git config files
   codex      Restore Codex prompts/skills/agents/rules/hooks
-  aws        Restore AWS config only
-  gcloud     Restore gcloud named configs only
-  azure      Restore Azure CLI config only
-  cloud      Restore aws, gcloud, and azure together
-  all        Restore shell, git, codex, and cloud
+  all        Restore shell, git, and codex
 
 Options:
   --dry-run   Print actions without writing files
@@ -125,28 +121,6 @@ restore_codex() {
   copy_dir "$root/codex/skills" "$HOME/.codex/skills"
 }
 
-restore_aws() {
-  local root="$1"
-  log "Restoring AWS config"
-  copy_file "$root/cloud/aws/config" "$HOME/.aws/config"
-}
-
-restore_gcloud() {
-  local root="$1"
-  log "Restoring gcloud config"
-  copy_file "$root/cloud/gcloud/active_config" "$HOME/.config/gcloud/active_config"
-  copy_dir "$root/cloud/gcloud/configurations" "$HOME/.config/gcloud/configurations"
-  copy_dir "$root/cloud/gcloud/emulators" "$HOME/.config/gcloud/emulators"
-}
-
-restore_azure() {
-  local root="$1"
-  log "Restoring Azure config"
-  copy_file "$root/cloud/azure/config" "$HOME/.azure/config"
-  copy_file "$root/cloud/azure/clouds.config" "$HOME/.azure/clouds.config"
-  copy_file "$root/cloud/azure/az.json" "$HOME/.azure/az.json"
-}
-
 run_selection() {
   local root="$1"
   local item="$2"
@@ -154,21 +128,10 @@ run_selection() {
     shell) restore_shell "$root" ;;
     git) restore_git "$root" ;;
     codex) restore_codex "$root" ;;
-    aws) restore_aws "$root" ;;
-    gcloud) restore_gcloud "$root" ;;
-    azure) restore_azure "$root" ;;
-    cloud)
-      restore_aws "$root"
-      restore_gcloud "$root"
-      restore_azure "$root"
-      ;;
     all)
       restore_shell "$root"
       restore_git "$root"
       restore_codex "$root"
-      restore_aws "$root"
-      restore_gcloud "$root"
-      restore_azure "$root"
       ;;
     *)
       printf 'Unknown item: %s\n' "$item" >&2
@@ -195,7 +158,7 @@ main() {
   done
 
   if [[ "${#SELECTIONS[@]}" -eq 0 ]]; then
-    SELECTIONS=(shell git codex cloud)
+    SELECTIONS=(shell git codex)
   fi
 
   local root
@@ -208,11 +171,7 @@ main() {
   cat <<'NEXT'
 Next:
   1. Open a new shell after restoring shell config.
-  2. Re-auth providers manually:
-     gh auth login
-     aws sso login --profile <profile>
-     gcloud auth login
-     az login
+  2. Re-auth tools you install separately as needed.
 NEXT
 }
 

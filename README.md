@@ -11,17 +11,12 @@ Sanitized development workflow bundle for setting up a new laptop deliberately.
 - `codex/agents/`: local Codex agent definitions.
 - `codex/rules/`: local Codex rules.
 - `codex/AGENTS.md` and `codex/hooks.json`: portable Codex guidance and hook configuration.
-- `cloud/aws/config`: AWS profile metadata only.
-- `cloud/gcloud/`: gcloud named configurations and active config only.
-- `cloud/azure/`: Azure CLI non-token configuration files only.
 
 ## Intentionally Excluded
 
 - SSH private keys, public keys, known hosts, and SSH config.
 - GitHub CLI `hosts.yml` and auth state.
-- AWS credentials, SSO cache, and CLI cache.
-- gcloud credential databases, access tokens, ADC files, legacy credentials, logs, and virtualenv.
-- Azure MSAL token cache, session files, logs, telemetry, and profile/session state.
+- All cloud provider config and auth state.
 - Codex auth, sessions, logs, browser sessions, caches, temporary files, SQLite state, worktrees, history, and internal storage.
 - Token-shaped examples in copied Codex reference files were redacted so the bundle passes `gitleaks`.
 
@@ -37,9 +32,9 @@ bash ./scripts/setup-dev-machine.sh
 Default behavior:
 
 - Installs the small default tool set: Homebrew, Git, GitHub CLI, `gitleaks`, `ripgrep`, Node, Codex CLI, AWS CLI, gcloud, and Azure CLI.
-- Restores `shell`, `git`, `codex`, and `cloud` config into the right places under `$HOME`.
+- Restores `shell`, `git`, and `codex` config into the right places under `$HOME`.
 
-Re-auth manually:
+Re-auth manually if and when you install and use cloud tooling:
 
 ```sh
 gh auth login
