@@ -1,0 +1,64 @@
+{
+  "default": {
+    "reason": "Required for this migration repo to be useful on a fresh Mac.",
+    "brew": ["git", "gh", "gitleaks", "ripgrep", "node", "awscli", "azure-cli"],
+    "casks": ["google-cloud-sdk"],
+    "npm": ["@openai/codex"]
+  },
+  "profiles": {
+    "shell": {
+      "reason": "Shell tools already referenced by shell config.",
+      "brew": ["bat", "eza", "fd", "fzf", "jq", "tmux", "zoxide"],
+      "casks": [],
+      "npm": []
+    },
+    "js": {
+      "reason": "JavaScript tools with usage evidence from shell config and history.",
+      "brew": ["bun", "pnpm", "yarn"],
+      "casks": [],
+      "npm": ["nodemon", "tsx"]
+    },
+    "k8s": {
+      "reason": "Kubernetes and cluster tooling with usage evidence.",
+      "brew": ["argocd", "kubectl", "kubectx", "helm", "k9s", "kind", "minikube", "skaffold"],
+      "casks": [],
+      "npm": []
+    },
+    "db": {
+      "reason": "Database clients and local services with usage evidence.",
+      "brew": ["redis", "mysql-client", "mongodb/brew/mongodb-database-tools", "postgresql@17"],
+      "casks": [],
+      "npm": []
+    },
+    "mobile": {
+      "reason": "Mobile tooling with usage evidence.",
+      "brew": ["cocoapods"],
+      "casks": ["android-commandlinetools"],
+      "npm": []
+    },
+    "ai": {
+      "reason": "Installed AI/dev CLIs from the current machine.",
+      "brew": ["anomalyco/tap/opencode"],
+      "casks": ["claude-code", "gemini"],
+      "npm": []
+    },
+    "deploy": {
+      "reason": "Deploy and service CLIs present on the current machine.",
+      "brew": ["hcloud", "render", "stripe/stripe-cli/stripe", "temporal"],
+      "casks": ["ngrok"],
+      "npm": ["wrangler"]
+    },
+    "infra": {
+      "reason": "Local container runtime only.",
+      "brew": [],
+      "casks": ["docker"],
+      "npm": []
+    },
+    "gui": {
+      "reason": "Selected GUI tools for terminal and window management.",
+      "brew": [],
+      "casks": ["ghostty", "iterm2", "rectangle"],
+      "npm": []
+    }
+  }
+}
