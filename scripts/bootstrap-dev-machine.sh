@@ -259,7 +259,8 @@ Next steps:
        aws sso login --profile <profile>
        gcloud auth login
        az login
-  2. Copy only reviewed files from shell/, git/, codex/, and cloud/.
+  2. Restore reviewed config with:
+       bash ./scripts/restore-configs.sh
 NEXT
 }
 
